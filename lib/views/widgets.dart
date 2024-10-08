@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitchcount/models/travel_segment_type.dart';
 import 'package:hitchcount/providers/controllers/travel_segment_list/add_new_travel_segment_controller_provider.dart';
+import 'package:hitchcount/providers/controllers/travel_segment_list/travel_segment_list_controller_provider.dart';
 
 import '../models/travel_segment_model.dart';
 
@@ -31,29 +32,85 @@ class TravelSegmentTile extends StatelessWidget {
 }
 
 class AddNewPlaceContainer extends ConsumerWidget {
-  const AddNewPlaceContainer({Key? key, required this.onAccept})
-      : super(key: key);
-
-  final VoidCallback onAccept;
+  const AddNewPlaceContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double startLen = 3.0;
-    double startLon = 4.0;
-    double endLen = 5.0;
-    double endLon = 6.0;
+    final TextEditingController startLonController = TextEditingController();
+    final TextEditingController startLatController = TextEditingController();
+    final TextEditingController endLonController = TextEditingController();
+    final TextEditingController endLatController = TextEditingController();
+
     return Column(
       children: [
         Row(
           children: [
-            Text('$startLon'),
-            Text('$startLen'),
-            Text('$endLon'),
-            Text('$endLen'),
-            TravelTypeDropdown(),
+            // Wrap each TextField in a Flexible to allow the Row to handle dynamic widths
+            Flexible(
+              child: TextField(
+                controller: startLonController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'Start Longitude'),
+                onChanged: (value) {
+                  double? lon = double.tryParse(value);
+                  if (lon != null) {
+                    ref.read(addNewTravelSegmentController).start_lon = lon;
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 10), // Add spacing between fields
+            Flexible(
+              child: TextField(
+                controller: startLatController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'Start Latitude'),
+                onChanged: (value) {
+                  double? lat = double.tryParse(value);
+                  if (lat != null) {
+                    ref.read(addNewTravelSegmentController).start_lat = lat;
+                  }
+                },
+              ),
+            ),
           ],
         ),
-        AddNewPlaceButton(onPressed: onAccept),
+        SizedBox(height: 10), // Add some space between rows
+        Row(
+          children: [
+            Flexible(
+              child: TextField(
+                controller: endLonController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'End Longitude'),
+                onChanged: (value) {
+                  double? lon = double.tryParse(value);
+                  if (lon != null) {
+                    ref.read(addNewTravelSegmentController).end_lon = lon;
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 10),
+            Flexible(
+              child: TextField(
+                controller: endLatController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'End Latitude'),
+                onChanged: (value) {
+                  double? lat = double.tryParse(value);
+                  if (lat != null) {
+                    ref.read(addNewTravelSegmentController).end_lat = lat;
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        TravelTypeDropdown(),
+        SizedBox(height: 10),
+        AddNewPlaceButton(),
       ],
     );
   }
@@ -80,16 +137,25 @@ class TravelTypeDropdown extends ConsumerWidget {
   }
 }
 
-class AddNewPlaceButton extends StatelessWidget {
-  const AddNewPlaceButton({Key? key, required this.onPressed})
-      : super(key: key);
-
-  final VoidCallback onPressed;
+class AddNewPlaceButton extends ConsumerWidget {
+  const AddNewPlaceButton({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: () {
+        double startLat = ref.read(addNewTravelSegmentController).start_lat;
+
+        double startLon = ref.read(addNewTravelSegmentController).start_lon;
+
+        double endLat = ref.read(addNewTravelSegmentController).end_lat;
+        double endLon = ref.read(addNewTravelSegmentController).end_lon;
+        TravelSegmentType travelSegmentType =
+            ref.read(addNewTravelSegmentController).type;
+        ref
+            .read(travelSegmentNotifier.notifier)
+            .add(startLat, startLon, endLat, endLon, travelSegmentType);
+      },
       child: Text('Dodaj nowy'),
     );
   }

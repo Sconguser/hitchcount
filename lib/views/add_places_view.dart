@@ -61,7 +61,7 @@ class AddPlacesView extends ConsumerWidget {
               const SizedBox(height: 10),
 
               // Button will always be placed directly under the list
-              AddNewPlaceContainer(onAccept: () {}),
+              AddNewPlaceContainer(),
             ],
           ),
         ),
