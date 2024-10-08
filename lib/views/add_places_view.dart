@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitchcount/providers/controllers/travel_segment_list/travel_segment_list_controller_provider.dart';
 
 import '../models/travel_segment_model.dart';
-import '../providers/controllers/travel_segment_list/widgets.dart';
+import 'widgets.dart';
 
 class AddPlacesView extends ConsumerWidget {
   const AddPlacesView({Key? key}) : super(key: key);

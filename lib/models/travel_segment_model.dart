@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'travel_segment_model.freezed.dart';
+import 'travel_segment_type.dart';
 
-enum TravelSegmentType { hitchhike, car, train, walk, plane, bike }
+part 'travel_segment_model.freezed.dart';
 
 @unfreezed
 class TravelSegment with _$TravelSegment {

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import '../../../models/travel_segment_model.dart';
+import '../../../models/travel_segment_type.dart';
 
 class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
   TravelSegmentListNotifier(List<TravelSegment> state, this.ref) : super(state);
