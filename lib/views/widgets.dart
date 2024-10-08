@@ -21,10 +21,29 @@ class TravelSegmentTile extends StatelessWidget {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(Icons.remove),
+            icon: const Icon(
+              Icons.remove_circle_outline,
+              color: Colors.red,
+            ),
             onPressed: onRemove,
           ),
-          Text(travelSegment.type.toString()),
+          Icon(travelSegment.type.icon),
+          SizedBox(
+            width: 10,
+          ),
+          Text(travelSegment.type.name),
+          SizedBox(width: 10),
+          Text(
+            'From ${travelSegment.start_lon} : ${travelSegment.start_lat}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            'To ${travelSegment.end_lon} : ${travelSegment.end_lat}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

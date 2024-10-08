@@ -24,13 +24,11 @@ class AddPlacesView extends ConsumerWidget {
             mainAxisSize: MainAxisSize
                 .min, // Make the Column take up only the space it needs
             children: [
-              Text('Wpisz tutaj miejsca'),
-              const SizedBox(height: 10),
-
               // Constrain the ListView's height to a max height
               ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: height * 0.6, // Set a max height for the list
+                  maxWidth: width * 0.4,
                 ),
                 child: ReorderableListView(
                   shrinkWrap:
