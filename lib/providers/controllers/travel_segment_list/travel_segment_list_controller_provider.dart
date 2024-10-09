@@ -8,13 +8,13 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
   TravelSegmentListNotifier(List<TravelSegment> state, this.ref) : super(state);
   final Ref ref;
 
-  void add(double startLat, double startLon, TravelSegmentType type) {
+  void add(double lat, double lng, TravelSegmentType type) {
     if (state.isEmpty) {
       // override type selection if first segment is added
       type = TravelSegmentType.start;
     }
-    final newSegment = TravelSegment(
-        id: state.length + 1, lat: startLat, lng: startLon, type: type);
+    final newSegment =
+        TravelSegment(id: state.length + 1, lat: lat, lng: lng, type: type);
 
     final updatedState = List<TravelSegment>.from(state);
     final last = _findLast();
@@ -39,6 +39,9 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
     }
     if (nextTravelSegment != null) {
       nextTravelSegment.prev = previousTravelSegment;
+    }
+    if (nextTravelSegment?.prev == null) {
+      nextTravelSegment?.type = TravelSegmentType.start;
     }
     updatedState.removeWhere((segment) => segment.id == travelSegment.id);
 
@@ -117,79 +120,6 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
     // ref.read(travelSegmentListChangeNotifierProvider.notifier).trigger();
   }
 
-  void switchPlaces(int firstId, int secondId) {
-    TravelSegment? first = _findById(firstId);
-    TravelSegment? second = _findById(secondId);
-
-    if (first == null || second == null) {
-      throw Exception(
-          'One or more of the elements were not found in the list, this should not happen');
-    }
-
-    // If the two segments are the same, there's no need to switch
-    if (first == second) return;
-
-    TravelSegment? firstPrev = first.prev;
-    TravelSegment? firstNext = first.next;
-    TravelSegment? secondPrev = second.prev;
-    TravelSegment? secondNext = second.next;
-
-    // Check if first and second are adjacent
-    bool areAdjacent = firstNext == second || secondNext == first;
-
-    // Switch prev and next pointers between first and second
-    if (!areAdjacent) {
-      // Non-adjacent case
-      first.prev = secondPrev;
-      first.next = secondNext;
-      second.prev = firstPrev;
-      second.next = firstNext;
-
-      if (firstPrev != null) {
-        firstPrev.next = second;
-      }
-      if (firstNext != null) {
-        firstNext.prev = second;
-      }
-      if (secondPrev != null) {
-        secondPrev.next = first;
-      }
-      if (secondNext != null) {
-        secondNext.prev = first;
-      }
-    } else {
-      // Adjacent case, where first is directly before second
-      if (firstNext == second) {
-        // First is directly before second
-        first.prev = second;
-        first.next = secondNext;
-        second.prev = firstPrev;
-        second.next = first;
-
-        if (firstPrev != null) {
-          firstPrev.next = second;
-        }
-        if (secondNext != null) {
-          secondNext.prev = first;
-        }
-      } else {
-        // Second is directly before first
-        second.prev = first;
-        second.next = firstNext;
-        first.prev = secondPrev;
-        first.next = second;
-
-        if (secondPrev != null) {
-          secondPrev.next = first;
-        }
-        if (firstNext != null) {
-          firstNext.prev = second;
-        }
-      }
-    }
-    // ref.read(travelSegmentListChangeNotifierProvider.notifier).trigger();
-  }
-
   List<TravelSegment> getOrderedSegments() {
     List<TravelSegment> orderedSegments = [];
     TravelSegment? currentSegment =
@@ -227,8 +157,10 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
 
   Future<void> calculateEveryDistance() async {
     OpenRouteService openRouteService = OpenRouteService();
-    // calculateSegmentDistance(openRouteService, state[0]);
+    // calculateSegmentDistance(openRouteService, state[1]);
+
     List<Future<double?>> futures = state
+        .where((TravelSegment travelSegment) => travelSegment.prev != null)
         .map((TravelSegment travelSegment) {
           return calculateSegmentDistance(openRouteService, travelSegment);
         })
@@ -244,15 +176,15 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
 
   Future<double?>? calculateSegmentDistance(
       OpenRouteService openRouteService, TravelSegment travelSegment) {
-    if (travelSegment.next == null) {
+    if (travelSegment.prev == null) {
       return null;
     }
     return openRouteService
         .getDistance(
-            startLat: travelSegment.lat,
-            startLng: travelSegment.lng,
-            endLat: travelSegment.next!.lat,
-            endLng: travelSegment.next!.lng)
+            startLat: travelSegment.prev!.lat,
+            startLng: travelSegment.prev!.lng,
+            endLat: travelSegment.lat,
+            endLng: travelSegment.lng)
         .then((distance) => travelSegment.distance = distance);
   }
 }

@@ -30,7 +30,7 @@ class AddPlacesView extends ConsumerWidget {
               ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: height * 0.6, // Set a max height for the list
-                  maxWidth: width * 0.4,
+                  maxWidth: width * 0.8,
                 ),
                 child: ReorderableListView(
                   shrinkWrap:
@@ -65,13 +65,17 @@ class AddPlacesView extends ConsumerWidget {
                 isFirst: orderedTravelSegments.isEmpty,
               ),
               AddNewPlaceButton(),
+              const SizedBox(height: 10),
               ElevatedButton(
-                  onPressed: () {
-                    ref
-                        .read(travelSegmentNotifier.notifier)
-                        .calculateEveryDistance();
-                  },
-                  child: Text('Policz odległość'))
+                onPressed: orderedTravelSegments.length <= 1
+                    ? null
+                    : () {
+                        ref
+                            .read(travelSegmentNotifier.notifier)
+                            .calculateEveryDistance();
+                      },
+                child: Text('Policz odległość'),
+              )
             ],
           ),
         ),
