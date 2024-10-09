@@ -117,7 +117,7 @@ class TravelTypeDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DropdownMenu<TravelSegmentType>(
-      initialSelection: TravelSegmentType.hitchhike,
+      initialSelection: ref.read(addNewTravelSegmentController).type,
       label: const Text('Mode of travel'),
       onSelected: (TravelSegmentType? type) {
         if (type != null) {
@@ -145,15 +145,15 @@ class AddNewPlaceButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
       onPressed: () {
-        double startLat = ref.read(addNewTravelSegmentController).lat;
+        double lat = ref.read(addNewTravelSegmentController).lat;
 
-        double startLon = ref.read(addNewTravelSegmentController).lng;
+        double lng = ref.read(addNewTravelSegmentController).lng;
 
         TravelSegmentType travelSegmentType =
             ref.read(addNewTravelSegmentController).type;
         ref
             .read(travelSegmentNotifier.notifier)
-            .add(startLat, startLon, travelSegmentType);
+            .add(lat, lng, travelSegmentType);
       },
       child: Text('Dodaj nowy'),
     );

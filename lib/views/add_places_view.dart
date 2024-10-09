@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hitchcount/providers/controllers/travel_segment_list/travel_segment_list_controller_provider.dart';
@@ -59,7 +61,9 @@ class AddPlacesView extends ConsumerWidget {
               const SizedBox(height: 10),
 
               // Button will always be placed directly under the list
-              AddNewPlaceContainer(),
+              AddNewPlaceContainer(
+                isFirst: orderedTravelSegments.isEmpty,
+              ),
               AddNewPlaceButton(),
               ElevatedButton(
                   onPressed: () {

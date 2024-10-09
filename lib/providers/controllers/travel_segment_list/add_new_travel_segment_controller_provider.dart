@@ -8,5 +8,5 @@ final addNewTravelSegmentController =
           id: 0,
           lng: 0.0,
           lat: 0.0,
-          type: TravelSegmentType.start,
+          type: TravelSegmentType.hitchhike,
         ));

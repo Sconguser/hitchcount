@@ -9,6 +9,10 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
   final Ref ref;
 
   void add(double startLat, double startLon, TravelSegmentType type) {
+    if (state.isEmpty) {
+      // override type selection if first segment is added
+      type = TravelSegmentType.start;
+    }
     final newSegment = TravelSegment(
         id: state.length + 1, lat: startLat, lng: startLon, type: type);
 
@@ -99,6 +103,14 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
 
       newSegment.prev = oldSegment;
       newPrev?.next = oldSegment;
+    }
+    if (newSegment.prev == null) {
+      oldSegment.type = newSegment.type ?? TravelSegmentType.hitchhike;
+      newSegment.type = TravelSegmentType.start;
+    }
+    if (oldSegment.prev == null) {
+      newSegment.type = oldSegment.type ?? TravelSegmentType.hitchhike;
+      oldSegment.type = TravelSegmentType.start;
     }
     state = getOrderedSegments();
 
