@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum TravelSegmentType {
+  start('starting point', Icons.pin_drop),
   hitchhike('hitchhiking', Icons.thumb_up),
   car('car', Icons.car_crash),
   train('train', Icons.train),

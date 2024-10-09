@@ -8,15 +8,9 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
   TravelSegmentListNotifier(List<TravelSegment> state, this.ref) : super(state);
   final Ref ref;
 
-  void add(double start_lat, double start_lon, double end_lat, double end_lon,
-      TravelSegmentType type) {
+  void add(double startLat, double startLon, TravelSegmentType type) {
     final newSegment = TravelSegment(
-        id: state.length + 1,
-        start_lat: start_lat,
-        start_lon: start_lon,
-        end_lat: end_lat,
-        end_lon: end_lon,
-        type: type);
+        id: state.length + 1, lat: startLat, lng: startLon, type: type);
 
     final updatedState = List<TravelSegment>.from(state);
     final last = _findLast();
@@ -221,20 +215,32 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
 
   Future<void> calculateEveryDistance() async {
     OpenRouteService openRouteService = OpenRouteService();
-    calculateSegmentDistance(openRouteService, state[0]);
-    // state.map((TravelSegment travelSegment) {
-    //   calculateSegmentDistance(openRouteService, travelSegment);
-    // });
+    // calculateSegmentDistance(openRouteService, state[0]);
+    List<Future<double?>> futures = state
+        .map((TravelSegment travelSegment) {
+          return calculateSegmentDistance(openRouteService, travelSegment);
+        })
+        .nonNulls
+        .toList();
+    await Future.wait(futures);
+    notifyListeners();
   }
 
-  void calculateSegmentDistance(
+  void notifyListeners() {
+    ref.read(travelSegmentListChangeNotifierProvider.notifier).trigger();
+  }
+
+  Future<double?>? calculateSegmentDistance(
       OpenRouteService openRouteService, TravelSegment travelSegment) {
-    openRouteService
+    if (travelSegment.next == null) {
+      return null;
+    }
+    return openRouteService
         .getDistance(
-            startLat: travelSegment.start_lat,
-            startLng: travelSegment.start_lon,
-            endLat: travelSegment.end_lat,
-            endLng: travelSegment.end_lon)
+            startLat: travelSegment.lat,
+            startLng: travelSegment.lng,
+            endLat: travelSegment.next!.lat,
+            endLng: travelSegment.next!.lng)
         .then((distance) => travelSegment.distance = distance);
   }
 }
@@ -242,67 +248,60 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
 final travelSegmentNotifier =
     StateNotifierProvider<TravelSegmentListNotifier, List<TravelSegment>>(
         (ref) {
-  TravelSegment last = TravelSegment(
-      id: 5,
-      start_lat: 0.0,
-      start_lon: 0.0,
-      end_lat: 1.0,
-      end_lon: 2.0,
-      type: TravelSegmentType.train,
-      next: null);
-  TravelSegment fourth = TravelSegment(
-      id: 4,
-      start_lat: 1.0,
-      start_lon: 2.0,
-      end_lat: 3.0,
-      end_lon: 4.0,
-      type: TravelSegmentType.hitchhike,
-      next: last);
-  last.prev = fourth;
-  TravelSegment third = TravelSegment(
-      id: 3,
-      start_lat: 4.0,
-      start_lon: 6.0,
-      end_lat: 7.0,
-      end_lon: 8.0,
-      type: TravelSegmentType.plane,
-      next: fourth);
-  fourth.prev = third;
-  TravelSegment second = TravelSegment(
-      id: 2,
-      start_lat: 2.0,
-      start_lon: 1.0,
-      end_lat: 9.0,
-      end_lon: 4.0,
-      type: TravelSegmentType.bike,
-      next: third);
-  third.prev = second;
-  TravelSegment first = TravelSegment(
-      id: 1,
-      start_lat: 50.311948,
-      start_lon: 18.546321,
-      end_lat: 50.195494,
-      end_lon: 18.702123,
-      type: TravelSegmentType.walk,
-      next: second);
-  second.prev = first;
-  TravelSegment zero = TravelSegment(
-      id: 0,
-      start_lat: 50.740249,
-      start_lon: 17.673989,
-      end_lat: 50.311948,
-      end_lon: 18.546321,
-      type: TravelSegmentType.car,
-      next: first);
-  first.prev = zero;
-  List<TravelSegment> travelSegments = [
-    zero,
-    first,
-    second,
-    third,
-    fourth,
-    last
-  ];
+  // TravelSegment last = TravelSegment(
+  //   id: 5,
+  //   lat: 0.0,
+  //   lng: 0.0,
+  //   type: TravelSegmentType.train,
+  //   next: null,
+  // );
+  // TravelSegment fourth = TravelSegment(
+  //   id: 4,
+  //   lat: 1.0,
+  //   lng: 2.0,
+  //   type: TravelSegmentType.hitchhike,
+  //   next: last,
+  // );
+  // last.prev = fourth;
+  // TravelSegment third = TravelSegment(
+  //   id: 3,
+  //   lat: 4.0,
+  //   lng: 6.0,
+  //   type: TravelSegmentType.plane,
+  //   next: fourth,
+  // );
+  // fourth.prev = third;
+  // TravelSegment second = TravelSegment(
+  //   id: 2,
+  //   lat: 2.0,
+  //   lng: 1.0,
+  //   type: TravelSegmentType.bike,
+  //   next: third,
+  // );
+  // third.prev = second;
+  // TravelSegment first = TravelSegment(
+  //     id: 1,
+  //     lat: 50.311948,
+  //     lng: 18.546321,
+  //     type: TravelSegmentType.walk,
+  //     next: second);
+  // second.prev = first;
+  // TravelSegment zero = TravelSegment(
+  //     id: 0,
+  //     lat: 50.740249,
+  //     lng: 17.673989,
+  //     type: TravelSegmentType.car,
+  //     next: first);
+  // first.prev = zero;
+  // List<TravelSegment> travelSegments = [
+  //   zero,
+  //   first,
+  //   second,
+  //   third,
+  //   fourth,
+  //   last
+  // ];
+  List<TravelSegment> travelSegments = [];
   return TravelSegmentListNotifier(travelSegments, ref);
 });
 

@@ -34,7 +34,7 @@ class TravelSegmentTile extends StatelessWidget {
           Text(travelSegment.type.name),
           SizedBox(width: 10),
           Text(
-            'Lon: ${travelSegment.start_lon} Lat: ${travelSegment.start_lat}',
+            'Lng: ${travelSegment.lng} Lat: ${travelSegment.lat}',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(
@@ -50,14 +50,15 @@ class TravelSegmentTile extends StatelessWidget {
 }
 
 class AddNewPlaceContainer extends ConsumerWidget {
-  const AddNewPlaceContainer({Key? key}) : super(key: key);
+  const AddNewPlaceContainer({Key? key, this.isFirst = false})
+      : super(key: key);
+
+  final bool isFirst;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController startLonController = TextEditingController();
-    final TextEditingController startLatController = TextEditingController();
-    final TextEditingController endLonController = TextEditingController();
-    final TextEditingController endLatController = TextEditingController();
+    final TextEditingController lngController = TextEditingController();
+    final TextEditingController latController = TextEditingController();
 
     return Column(
       children: [
@@ -66,13 +67,13 @@ class AddNewPlaceContainer extends ConsumerWidget {
             // Wrap each TextField in a Flexible to allow the Row to handle dynamic widths
             Flexible(
               child: TextField(
-                controller: startLonController,
+                controller: lngController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Start Longitude'),
+                decoration: InputDecoration(labelText: 'Longitude'),
                 onChanged: (value) {
-                  double? lon = double.tryParse(value);
-                  if (lon != null) {
-                    ref.read(addNewTravelSegmentController).start_lon = lon;
+                  double? lng = double.tryParse(value);
+                  if (lng != null) {
+                    ref.read(addNewTravelSegmentController).lng = lng;
                   }
                 },
               ),
@@ -80,45 +81,13 @@ class AddNewPlaceContainer extends ConsumerWidget {
             SizedBox(width: 10), // Add spacing between fields
             Flexible(
               child: TextField(
-                controller: startLatController,
+                controller: latController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'Start Latitude'),
+                decoration: InputDecoration(labelText: 'Latitude'),
                 onChanged: (value) {
                   double? lat = double.tryParse(value);
                   if (lat != null) {
-                    ref.read(addNewTravelSegmentController).start_lat = lat;
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10), // Add some space between rows
-        Row(
-          children: [
-            Flexible(
-              child: TextField(
-                controller: endLonController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'End Longitude'),
-                onChanged: (value) {
-                  double? lon = double.tryParse(value);
-                  if (lon != null) {
-                    ref.read(addNewTravelSegmentController).end_lon = lon;
-                  }
-                },
-              ),
-            ),
-            SizedBox(width: 10),
-            Flexible(
-              child: TextField(
-                controller: endLatController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: 'End Latitude'),
-                onChanged: (value) {
-                  double? lat = double.tryParse(value);
-                  if (lat != null) {
-                    ref.read(addNewTravelSegmentController).end_lat = lat;
+                    ref.read(addNewTravelSegmentController).lat = lat;
                   }
                 },
               ),
@@ -126,11 +95,19 @@ class AddNewPlaceContainer extends ConsumerWidget {
           ],
         ),
         SizedBox(height: 10),
-        TravelTypeDropdown(),
+        isFirst ? SizedBox.shrink() : TravelTypeDropdown(),
         SizedBox(height: 10),
-        AddNewPlaceButton(),
       ],
     );
+  }
+}
+
+class AddStartingPointContainer extends ConsumerWidget {
+  const AddStartingPointContainer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container();
   }
 }
 
@@ -148,8 +125,14 @@ class TravelTypeDropdown extends ConsumerWidget {
         }
       },
       dropdownMenuEntries: TravelSegmentType.values
-          .map((TravelSegmentType type) => DropdownMenuEntry<TravelSegmentType>(
-              value: type, label: type.name, leadingIcon: Icon(type.icon)))
+          .where((TravelSegmentType type) => type != TravelSegmentType.start)
+          .map(
+            (TravelSegmentType type) => DropdownMenuEntry<TravelSegmentType>(
+              value: type,
+              label: type.name,
+              leadingIcon: Icon(type.icon),
+            ),
+          )
           .toList(),
     );
   }
@@ -162,17 +145,15 @@ class AddNewPlaceButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
       onPressed: () {
-        double startLat = ref.read(addNewTravelSegmentController).start_lat;
+        double startLat = ref.read(addNewTravelSegmentController).lat;
 
-        double startLon = ref.read(addNewTravelSegmentController).start_lon;
+        double startLon = ref.read(addNewTravelSegmentController).lng;
 
-        double endLat = ref.read(addNewTravelSegmentController).end_lat;
-        double endLon = ref.read(addNewTravelSegmentController).end_lon;
         TravelSegmentType travelSegmentType =
             ref.read(addNewTravelSegmentController).type;
         ref
             .read(travelSegmentNotifier.notifier)
-            .add(startLat, startLon, endLat, endLon, travelSegmentType);
+            .add(startLat, startLon, travelSegmentType);
       },
       child: Text('Dodaj nowy'),
     );

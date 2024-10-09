@@ -18,14 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TravelSegment {
   int get id => throw _privateConstructorUsedError;
   set id(int value) => throw _privateConstructorUsedError;
-  double get start_lat => throw _privateConstructorUsedError;
-  set start_lat(double value) => throw _privateConstructorUsedError;
-  double get start_lon => throw _privateConstructorUsedError;
-  set start_lon(double value) => throw _privateConstructorUsedError;
-  double get end_lat => throw _privateConstructorUsedError;
-  set end_lat(double value) => throw _privateConstructorUsedError;
-  double get end_lon => throw _privateConstructorUsedError;
-  set end_lon(double value) => throw _privateConstructorUsedError;
+  double get lat => throw _privateConstructorUsedError;
+  set lat(double value) => throw _privateConstructorUsedError;
+  double get lng => throw _privateConstructorUsedError;
+  set lng(double value) => throw _privateConstructorUsedError;
   TravelSegment? get next => throw _privateConstructorUsedError;
   set next(TravelSegment? value) => throw _privateConstructorUsedError;
   TravelSegment? get prev => throw _privateConstructorUsedError;
@@ -48,10 +44,8 @@ abstract class $TravelSegmentCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      double start_lat,
-      double start_lon,
-      double end_lat,
-      double end_lon,
+      double lat,
+      double lng,
       TravelSegment? next,
       TravelSegment? prev,
       double? distance,
@@ -75,10 +69,8 @@ class _$TravelSegmentCopyWithImpl<$Res, $Val extends TravelSegment>
   @override
   $Res call({
     Object? id = null,
-    Object? start_lat = null,
-    Object? start_lon = null,
-    Object? end_lat = null,
-    Object? end_lon = null,
+    Object? lat = null,
+    Object? lng = null,
     Object? next = freezed,
     Object? prev = freezed,
     Object? distance = freezed,
@@ -89,21 +81,13 @@ class _$TravelSegmentCopyWithImpl<$Res, $Val extends TravelSegment>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      start_lat: null == start_lat
-          ? _value.start_lat
-          : start_lat // ignore: cast_nullable_to_non_nullable
+      lat: null == lat
+          ? _value.lat
+          : lat // ignore: cast_nullable_to_non_nullable
               as double,
-      start_lon: null == start_lon
-          ? _value.start_lon
-          : start_lon // ignore: cast_nullable_to_non_nullable
-              as double,
-      end_lat: null == end_lat
-          ? _value.end_lat
-          : end_lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      end_lon: null == end_lon
-          ? _value.end_lon
-          : end_lon // ignore: cast_nullable_to_non_nullable
+      lng: null == lng
+          ? _value.lng
+          : lng // ignore: cast_nullable_to_non_nullable
               as double,
       next: freezed == next
           ? _value.next
@@ -159,10 +143,8 @@ abstract class _$$TravelSegmentImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      double start_lat,
-      double start_lon,
-      double end_lat,
-      double end_lon,
+      double lat,
+      double lng,
       TravelSegment? next,
       TravelSegment? prev,
       double? distance,
@@ -186,10 +168,8 @@ class __$$TravelSegmentImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? start_lat = null,
-    Object? start_lon = null,
-    Object? end_lat = null,
-    Object? end_lon = null,
+    Object? lat = null,
+    Object? lng = null,
     Object? next = freezed,
     Object? prev = freezed,
     Object? distance = freezed,
@@ -200,21 +180,13 @@ class __$$TravelSegmentImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      start_lat: null == start_lat
-          ? _value.start_lat
-          : start_lat // ignore: cast_nullable_to_non_nullable
+      lat: null == lat
+          ? _value.lat
+          : lat // ignore: cast_nullable_to_non_nullable
               as double,
-      start_lon: null == start_lon
-          ? _value.start_lon
-          : start_lon // ignore: cast_nullable_to_non_nullable
-              as double,
-      end_lat: null == end_lat
-          ? _value.end_lat
-          : end_lat // ignore: cast_nullable_to_non_nullable
-              as double,
-      end_lon: null == end_lon
-          ? _value.end_lon
-          : end_lon // ignore: cast_nullable_to_non_nullable
+      lng: null == lng
+          ? _value.lng
+          : lng // ignore: cast_nullable_to_non_nullable
               as double,
       next: freezed == next
           ? _value.next
@@ -241,10 +213,8 @@ class __$$TravelSegmentImplCopyWithImpl<$Res>
 class _$TravelSegmentImpl implements _TravelSegment {
   _$TravelSegmentImpl(
       {required this.id,
-      required this.start_lat,
-      required this.start_lon,
-      required this.end_lat,
-      required this.end_lon,
+      required this.lat,
+      required this.lng,
       this.next,
       this.prev,
       this.distance,
@@ -253,13 +223,9 @@ class _$TravelSegmentImpl implements _TravelSegment {
   @override
   int id;
   @override
-  double start_lat;
+  double lat;
   @override
-  double start_lon;
-  @override
-  double end_lat;
-  @override
-  double end_lon;
+  double lng;
   @override
   TravelSegment? next;
   @override
@@ -271,7 +237,7 @@ class _$TravelSegmentImpl implements _TravelSegment {
 
   @override
   String toString() {
-    return 'TravelSegment(id: $id, start_lat: $start_lat, start_lon: $start_lon, end_lat: $end_lat, end_lon: $end_lon, next: $next, prev: $prev, distance: $distance, type: $type)';
+    return 'TravelSegment(id: $id, lat: $lat, lng: $lng, next: $next, prev: $prev, distance: $distance, type: $type)';
   }
 
   @JsonKey(ignore: true)
@@ -284,10 +250,8 @@ class _$TravelSegmentImpl implements _TravelSegment {
 abstract class _TravelSegment implements TravelSegment {
   factory _TravelSegment(
       {required int id,
-      required double start_lat,
-      required double start_lon,
-      required double end_lat,
-      required double end_lon,
+      required double lat,
+      required double lng,
       TravelSegment? next,
       TravelSegment? prev,
       double? distance,
@@ -297,17 +261,11 @@ abstract class _TravelSegment implements TravelSegment {
   int get id;
   set id(int value);
   @override
-  double get start_lat;
-  set start_lat(double value);
+  double get lat;
+  set lat(double value);
   @override
-  double get start_lon;
-  set start_lon(double value);
-  @override
-  double get end_lat;
-  set end_lat(double value);
-  @override
-  double get end_lon;
-  set end_lon(double value);
+  double get lng;
+  set lng(double value);
   @override
   TravelSegment? get next;
   set next(TravelSegment? value);

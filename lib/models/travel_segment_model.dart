@@ -8,10 +8,8 @@ part 'travel_segment_model.freezed.dart';
 class TravelSegment with _$TravelSegment {
   factory TravelSegment(
       {required int id,
-      required double start_lat,
-      required double start_lon,
-      required double end_lat,
-      required double end_lon,
+      required double lat,
+      required double lng,
       TravelSegment? next,
       TravelSegment? prev,
       double? distance,
