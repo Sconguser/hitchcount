@@ -30,6 +30,8 @@ mixin _$TravelSegment {
   set next(TravelSegment? value) => throw _privateConstructorUsedError;
   TravelSegment? get prev => throw _privateConstructorUsedError;
   set prev(TravelSegment? value) => throw _privateConstructorUsedError;
+  double? get distance => throw _privateConstructorUsedError;
+  set distance(double? value) => throw _privateConstructorUsedError;
   TravelSegmentType get type => throw _privateConstructorUsedError;
   set type(TravelSegmentType value) => throw _privateConstructorUsedError;
 
@@ -52,6 +54,7 @@ abstract class $TravelSegmentCopyWith<$Res> {
       double end_lon,
       TravelSegment? next,
       TravelSegment? prev,
+      double? distance,
       TravelSegmentType type});
 
   $TravelSegmentCopyWith<$Res>? get next;
@@ -78,6 +81,7 @@ class _$TravelSegmentCopyWithImpl<$Res, $Val extends TravelSegment>
     Object? end_lon = null,
     Object? next = freezed,
     Object? prev = freezed,
+    Object? distance = freezed,
     Object? type = null,
   }) {
     return _then(_value.copyWith(
@@ -109,6 +113,10 @@ class _$TravelSegmentCopyWithImpl<$Res, $Val extends TravelSegment>
           ? _value.prev
           : prev // ignore: cast_nullable_to_non_nullable
               as TravelSegment?,
+      distance: freezed == distance
+          ? _value.distance
+          : distance // ignore: cast_nullable_to_non_nullable
+              as double?,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -157,6 +165,7 @@ abstract class _$$TravelSegmentImplCopyWith<$Res>
       double end_lon,
       TravelSegment? next,
       TravelSegment? prev,
+      double? distance,
       TravelSegmentType type});
 
   @override
@@ -183,6 +192,7 @@ class __$$TravelSegmentImplCopyWithImpl<$Res>
     Object? end_lon = null,
     Object? next = freezed,
     Object? prev = freezed,
+    Object? distance = freezed,
     Object? type = null,
   }) {
     return _then(_$TravelSegmentImpl(
@@ -214,6 +224,10 @@ class __$$TravelSegmentImplCopyWithImpl<$Res>
           ? _value.prev
           : prev // ignore: cast_nullable_to_non_nullable
               as TravelSegment?,
+      distance: freezed == distance
+          ? _value.distance
+          : distance // ignore: cast_nullable_to_non_nullable
+              as double?,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -233,6 +247,7 @@ class _$TravelSegmentImpl implements _TravelSegment {
       required this.end_lon,
       this.next,
       this.prev,
+      this.distance,
       required this.type});
 
   @override
@@ -250,11 +265,13 @@ class _$TravelSegmentImpl implements _TravelSegment {
   @override
   TravelSegment? prev;
   @override
+  double? distance;
+  @override
   TravelSegmentType type;
 
   @override
   String toString() {
-    return 'TravelSegment(id: $id, start_lat: $start_lat, start_lon: $start_lon, end_lat: $end_lat, end_lon: $end_lon, next: $next, prev: $prev, type: $type)';
+    return 'TravelSegment(id: $id, start_lat: $start_lat, start_lon: $start_lon, end_lat: $end_lat, end_lon: $end_lon, next: $next, prev: $prev, distance: $distance, type: $type)';
   }
 
   @JsonKey(ignore: true)
@@ -273,6 +290,7 @@ abstract class _TravelSegment implements TravelSegment {
       required double end_lon,
       TravelSegment? next,
       TravelSegment? prev,
+      double? distance,
       required TravelSegmentType type}) = _$TravelSegmentImpl;
 
   @override
@@ -296,6 +314,9 @@ abstract class _TravelSegment implements TravelSegment {
   @override
   TravelSegment? get prev;
   set prev(TravelSegment? value);
+  @override
+  double? get distance;
+  set distance(double? value);
   @override
   TravelSegmentType get type;
   set type(TravelSegmentType value);

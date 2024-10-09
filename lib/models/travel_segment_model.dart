@@ -14,6 +14,7 @@ class TravelSegment with _$TravelSegment {
       required double end_lon,
       TravelSegment? next,
       TravelSegment? prev,
+      double? distance,
       required TravelSegmentType type}) = _TravelSegment;
   // factory TravelSegment.fromJson(Map<String, dynamic> json) =>
   //     _$TravelSegmentFromJson(json);

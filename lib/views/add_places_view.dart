@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hitchcount/providers/controllers/map_controller_provider/open_route_service.dart';
 import 'package:hitchcount/providers/controllers/travel_segment_list/travel_segment_list_controller_provider.dart';
 
 import '../models/travel_segment_model.dart';
@@ -60,6 +61,19 @@ class AddPlacesView extends ConsumerWidget {
 
               // Button will always be placed directly under the list
               AddNewPlaceContainer(),
+              ElevatedButton(
+                  onPressed: () {
+                    ref
+                        .read(travelSegmentNotifier.notifier)
+                        .calculateEveryDistance();
+                    //   OpenRouteService().getDistance(
+                    //       // startLat: startLat,
+                    //       // startLng: startLng,
+                    //       // endLat: endLat,
+                    //       // endLng: endLng);
+                    // },
+                  },
+                  child: Text('Policz odległość'))
             ],
           ),
         ),

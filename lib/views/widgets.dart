@@ -34,16 +34,15 @@ class TravelSegmentTile extends StatelessWidget {
           Text(travelSegment.type.name),
           SizedBox(width: 10),
           Text(
-            'From ${travelSegment.start_lon} : ${travelSegment.start_lat}',
+            'Lon: ${travelSegment.start_lon} Lat: ${travelSegment.start_lat}',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(
             width: 10,
           ),
-          Text(
-            'To ${travelSegment.end_lon} : ${travelSegment.end_lat}',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          travelSegment.distance != null
+              ? Text('Distance: ${travelSegment.distance}')
+              : SizedBox.shrink(),
         ],
       ),
     );

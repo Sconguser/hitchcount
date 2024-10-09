@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
+import 'package:hitchcount/providers/controllers/map_controller_provider/open_route_service.dart';
 import '../../../models/travel_segment_model.dart';
 import '../../../models/travel_segment_type.dart';
 
@@ -217,6 +218,25 @@ class TravelSegmentListNotifier extends StateNotifier<List<TravelSegment>> {
     }
     return state.firstWhereOrNull((travelSegment) => travelSegment.id == id);
   }
+
+  Future<void> calculateEveryDistance() async {
+    OpenRouteService openRouteService = OpenRouteService();
+    calculateSegmentDistance(openRouteService, state[0]);
+    // state.map((TravelSegment travelSegment) {
+    //   calculateSegmentDistance(openRouteService, travelSegment);
+    // });
+  }
+
+  void calculateSegmentDistance(
+      OpenRouteService openRouteService, TravelSegment travelSegment) {
+    openRouteService
+        .getDistance(
+            startLat: travelSegment.start_lat,
+            startLng: travelSegment.start_lon,
+            endLat: travelSegment.end_lat,
+            endLng: travelSegment.end_lon)
+        .then((distance) => travelSegment.distance = distance);
+  }
 }
 
 final travelSegmentNotifier =
@@ -259,19 +279,19 @@ final travelSegmentNotifier =
   third.prev = second;
   TravelSegment first = TravelSegment(
       id: 1,
-      start_lat: 2.0,
-      start_lon: 3.0,
-      end_lat: 8.0,
-      end_lon: 9.0,
+      start_lat: 50.311948,
+      start_lon: 18.546321,
+      end_lat: 50.195494,
+      end_lon: 18.702123,
       type: TravelSegmentType.walk,
       next: second);
   second.prev = first;
   TravelSegment zero = TravelSegment(
       id: 0,
-      start_lat: 2.0,
-      start_lon: 89.0,
-      end_lat: 54.0,
-      end_lon: 54.0,
+      start_lat: 50.740249,
+      start_lon: 17.673989,
+      end_lat: 50.311948,
+      end_lon: 18.546321,
       type: TravelSegmentType.car,
       next: first);
   first.prev = zero;
